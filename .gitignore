@@ -23,3 +23,4 @@
 # generated
 obj/
 bin/
+artifacts/
