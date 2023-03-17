@@ -1,0 +1,36 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <BuildDependsOn>
+      JSBuild;
+      $(BuildDependsOn)
+    </BuildDependsOn>
+    <JSRestoreBeforeTargets>
+      Restore;
+      $(JSRestoreBeforeTargets)
+    </JSRestoreBeforeTargets>
+  </PropertyGroup>
+
+  <Target Name="JSClean" AfterTargets="Clean">
+    <Delete Files="$(_JSRestoreStamp)" />
+    <Delete Files="$(_JSBuildStamp)" />
+  </Target>
+
+  <Target Name="JSRestore"
+          Condition="'$(JSRestoreCommand)' != ''"
+          BeforeTargets='$(JSRestoreBeforeTargets)'>
+    <Touch Files="$(_JSRestoreStamp)" AlwaysCreate="true" />
+    <Exec Command="'$(JSPackageManager)' $(JSRestoreCommand)"
+          WorkingDirectory="$(JSWorkingDirectory)"
+          EnvironmentVariables="$(JSEnvironmentVariables)" />
+    <Delete Files="$(_JSRestoreStamp)" />
+  </Target>
+
+  <Target Name="JSBuild"
+          Condition="'$(JSBuildCommand)' != ''">
+    <Touch Files="$(_JSBuildStamp)" AlwaysCreate="true" />
+    <Exec Command="'$(JSPackageManager)' $(JSBuildCommand)"
+          WorkingDirectory="$(JSWorkingDirectory)"
+          EnvironmentVariables="$(JSEnvironmentVariables)" />
+    <Delete Files="$(_JSBuildStamp)" />
+  </Target>
+</Project>

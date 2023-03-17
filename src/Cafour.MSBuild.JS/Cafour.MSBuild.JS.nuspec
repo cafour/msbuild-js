@@ -3,20 +3,23 @@
   <metadata>
     <id>Cafour.MSBuild.JS</id>
     <version>$version$</version>
-    <authors>Adam Štěpánek</authors>
-    <owners>Adam Štěpánek</owners>
+    <authors>$authors$</authors>
+    <owners>$owners$</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <licenseUrl>https://opensource.org/license/BSD-3-clause</licenseUrl>
     <projectUrl>https://github.com/cafour/msbuild-js</projectUrl>
     <description>Opinionated MSBuild targets for integration with the JS world </description>
     <copyright>Copyright © Adam Štěpánek</copyright>
     <tags>msbuild javascript npm yarn pnpm corepack</tags>
-    <repository type="git" url="https://github.com/cafour/msbuild-js" commit="$repositoryCommit$" />
+    <repository type="git" url="$repositoryUrl$" commit="$repositoryCommit$" />
+    <icon>icon.png</icon>
   </metadata>
   <files>
     <!-- This placeholder file tells nuget that this package is compatible with basically anything. -->
     <file src="_._" target="lib/netstandard1.0/" />
     <file src="_._" target="lib/net40/" />
+    
+    <file src="..\..\icon.png" target="icon.png" />
 
     <file src="sdk\" target="sdk/" />
     <file src="targets\" target="build/" />

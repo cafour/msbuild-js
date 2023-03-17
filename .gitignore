@@ -17,6 +17,8 @@
 !*.csproj
 !_._
 !*.nuspec
+!*.icon
+!*.png
 
 # generated
 obj/

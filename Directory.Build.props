@@ -7,10 +7,24 @@
     <PackageOutputPath>$(MSBuildThisFileDirectory)artifacts/</PackageOutputPath>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageProjectUrl>https://github.com/cafour/msbuild-js</PackageProjectUrl>
-    <PackageLicenseExpression> BSD-3-Clause</PackageLicenseExpression>
+    <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/cafour/msbuild-js</RepositoryUrl>
     <IsPackable>false</IsPackable>
+    <PackageIcon>$(MSBuildThisFileDirectory)icon.png</PackageIcon>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <NuspecProperties>
+      $(NuspecProperties);
+      authors=$(Authors);
+      owners=$(Owners);
+      repoUrl=$(RepositoryUrl);
+    </NuspecProperties>
+    <NuspecProperties Condition="'$(RepositoryCommit)' != ''">
+      $(NuspecProperties);
+      repositoryCommit=$(SourceRevisionId);
+    </NuspecProperties>
   </PropertyGroup>
 
   <ItemGroup>
