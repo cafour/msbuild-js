@@ -9,6 +9,7 @@
 
 !LICENSE
 !*.md
+!.editorconfig
 !*.sln
 !*.cs
 !*.props
