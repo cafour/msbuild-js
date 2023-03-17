@@ -10,27 +10,82 @@
     </JSRestoreBeforeTargets>
   </PropertyGroup>
 
+  <Target Name="_PrepareJSPackagerManager"
+          Condition="'$(JSPackageManager)' == 'auto'"
+          BeforeTargets="JSRestore;JSBuild">
+
+    <Exec Command="$(PnpmExecutablePath) --version"
+          IgnoreExitCode="true"
+          ContinueOnError="true"
+          ConsoleToMsBuild="true"
+          EnvironmentVariables="$(JSEnvironmentVariables)">
+      <Output TaskParameter="ExitCode" PropertyName="_PnpmVersionExitCode" />
+    </Exec>
+    <PropertyGroup Condition="'$(_PnpmVersionExitCode)' == '0'">
+      <JSPackageManager>$(PnpmExecutablePath)</JSPackageManager>
+    </PropertyGroup>
+
+    <Exec Command="$(YarnExecutablePath) --version"
+          IgnoreExitCode="true"
+          ContinueOnError="true"
+          ConsoleToMsBuild="true"
+          EnvironmentVariables="$(JSEnvironmentVariables)"
+          Condition="'$(_PnpmVersionExitCode)' != '0'">
+      <Output TaskParameter="ExitCode" PropertyName="_YarnVersionExitCode" />
+    </Exec>
+    <PropertyGroup Condition="'$(_YarnVersionExitCode)' == '0'">
+      <JSPackageManager>$(YarnExecutablePath)</JSPackageManager>
+    </PropertyGroup>
+
+    <Exec Command="$(NpmExecutablePath) --version"
+          IgnoreExitCode="true"
+          ContinueOnError="true"
+          ConsoleToMsBuild="true"
+          EnvironmentVariables="$(JSEnvironmentVariables)"
+          Condition="'$(_PnpmVersionExitCode)' != '0' and '$(_YarnVersionExitCode)' != '0'">
+      <Output TaskParameter="ExitCode" PropertyName="_NpmVersionExitCode" />
+    </Exec>
+    <PropertyGroup Condition="'$(_NpmVersionExitCode)' == '0'">
+      <JSPackageManager>$(NpmExecutablePath)</JSPackageManager>
+    </PropertyGroup>
+
+    <Error Code="CMJ0001"
+           Text="No usable JS package manager found. Not even npm. Is Node.js installed correctly?"
+           Condition="'$(_PnpmVersionExitCode)' != '0' and '$(_YarnVersionExitCode)' != '0' and '$(_NpmVersionExitCode)' != '0'" />
+
+  </Target>
+
   <Target Name="JSClean" AfterTargets="Clean">
     <Delete Files="$(_JSRestoreStamp)" />
-    <Delete Files="$(_JSBuildStamp)" />
+    <Delete Files="$(_JSBuildLock)" />
+  </Target>
+
+  <Target Name="_JSUnlock"
+          BeforeTargets="JSRestore;JSBuild"
+          Condition="Exists($(_JSBuildLock)) and $([MSBuild]::Subtract(
+              $([System.IO.File]::GetLastWriteTime('$(_JSBuildLock)').Ticks),
+              $([System.DateTime]::Now.Ticks)))
+            > $([MSBuild]::Multiply($(JSBuildLockLifetime), 10000000))">
+    <Delete Files="$(_JSBuildLock)" />
   </Target>
 
   <Target Name="JSRestore"
           Condition="'$(JSRestoreCommand)' != ''"
-          BeforeTargets='$(JSRestoreBeforeTargets)'>
+          BeforeTargets='$(JSRestoreBeforeTargets)'
+          Inputs="@(JSRestoreInput)"
+          Outputs="$(_JSRestoreStamp)">
     <Touch Files="$(_JSRestoreStamp)" AlwaysCreate="true" />
-    <Exec Command="'$(JSPackageManager)' $(JSRestoreCommand)"
+    <Exec Command="$(JSPackageManager) $(JSRestoreCommand)"
           WorkingDirectory="$(JSWorkingDirectory)"
           EnvironmentVariables="$(JSEnvironmentVariables)" />
-    <Delete Files="$(_JSRestoreStamp)" />
   </Target>
 
   <Target Name="JSBuild"
-          Condition="'$(JSBuildCommand)' != ''">
-    <Touch Files="$(_JSBuildStamp)" AlwaysCreate="true" />
-    <Exec Command="'$(JSPackageManager)' $(JSBuildCommand)"
+          Condition="'$(JSBuildCommand)' != '' and !Exists($(_JSBuildLock))">
+    <Touch Files="$(_JSBuildLock)" AlwaysCreate="true" />
+    <Exec Command="$(JSPackageManager) $(JSBuildCommand)"
           WorkingDirectory="$(JSWorkingDirectory)"
           EnvironmentVariables="$(JSEnvironmentVariables)" />
-    <Delete Files="$(_JSBuildStamp)" />
+    <Delete Files="$(_JSBuildLock)" />
   </Target>
 </Project>

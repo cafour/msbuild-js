@@ -1,15 +1,19 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <JSWorkingDir Condition="'$(JSWorkingDir)' == ''">$(MSBuildProjectDirectory)</JSWorkingDir>
+    <JSBuildLockLifetime Condition="'$(JSBuildLockLifetime)' == ''">120</JSBuildLockLifetime>
     <JSPackageManager Condition="'$(JSPackageManager)' == ''">auto</JSPackageManager>
     <JSRestoreCommand Condition="'$(JSRestoreCommand)' == ''">install</JSRestoreCommand>
     <JSBuildCommand Condition="'$(JSBuildCommand)' == ''">run build</JSBuildCommand>
     <NpmExecutablePath Condition="'$(NpmExecutablePath)' == ''">npm</NpmExecutablePath>
-    <YarnExecutablePath Condition="'$(YarnExecutablePath)' == ''">yarn</YarnExecutablePath>
+    <YarnExecutablePath Condition="'$(YarnExecutablePath)' == ''">yarnpkg</YarnExecutablePath>
     <PnpmExecutablePath Condition="'$(PnpmExecutablePath)' == ''">pnpm</PnpmExecutablePath>
-    <CorepackExecutablePath Condition="'$(CorepackExecutablePath)' == ''">pnpm</CorepackExecutablePath>
     <JSEnvironmentVariables>NO_COLOR=1;FORCE_COLOR=0;TERM=dumb;$(JSEnvironmentVariables)</JSEnvironmentVariables>
     <_JSRestoreStamp>$(BaseIntermediateOutputPath)/.js-restore-stamp</_JSRestoreStamp>
-    <_JSBuildStamp>$(BaseIntermediateOutputPath)/.js-build-stamp</_JSBuildStamp>
+    <_JSBuildLock>$(BaseIntermediateOutputPath)/.js-build-lock</_JSBuildLock>
   </PropertyGroup>
+  
+  <ItemGroup>
+    <JSRestoreInput Include="$(JSWorkingDir)/package*.json" />
+  </ItemGroup>
 </Project>
