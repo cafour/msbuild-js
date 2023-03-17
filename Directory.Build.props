@@ -20,10 +20,11 @@
       authors=$(Authors);
       owners=$(Owners);
       repoUrl=$(RepositoryUrl);
+      license=$(PackageLicenseExpression);
     </NuspecProperties>
     <NuspecProperties Condition="'$(RepositoryCommit)' != ''">
       $(NuspecProperties);
-      repositoryCommit=$(SourceRevisionId);
+      repoCommit=$(SourceRevisionId);
     </NuspecProperties>
   </PropertyGroup>
 
