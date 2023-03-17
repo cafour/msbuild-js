@@ -91,11 +91,17 @@
           BeforeTargets='$(JSRestoreBeforeTargets)'
           Inputs="@(JSRestoreInput)"
           Outputs="$(_JSRestoreStamp)">
-    <Touch Files="$(_JSRestoreStamp)" AlwaysCreate="true" />
     <Exec Command="$(JSPackageManager) $(JSRestoreCommand)"
           WorkingDirectory="$(JSWorkingDirectory)"
           EnvironmentVariables="$(JSEnvironmentVariables)"
-          UseUtf8Encoding="always" />
+          UseUtf8Encoding="always"
+          IgnoreExitCode="true"
+          ContinueOnError="true">
+      <Output TaskParameter="ExitCode" PropertyName="_RestoreExitCode" />
+    </Exec>
+    <Touch Files="$(_JSRestoreStamp)"
+           AlwaysCreate="true"
+           Condition="'$(_RestoreExitCode)' == '0'" />
   </Target>
 
   <Target Name="JSBuild"
@@ -104,11 +110,13 @@
           Inputs="@(JSBuildInput)"
           Outputs="$(_JSBuildStamp)">
     <Touch Files="$(_JSBuildLock)" AlwaysCreate="true" />
-    <Touch Files="$(_JSBuildStamp)" AlwaysCreate="true" />
     <Exec Command="$(JSPackageManager) $(JSBuildCommand)"
           WorkingDirectory="$(JSWorkingDirectory)"
           EnvironmentVariables="$(JSEnvironmentVariables)"
-          UseUtf8Encoding="always" />
+          UseUtf8Encoding="always"
+          IgnoreExitCode="true"
+          ContinueOnError="true"/>
     <Delete Files="$(_JSBuildLock)" />
+    <Touch Files="$(_JSBuildStamp)" AlwaysCreate="true" />
   </Target>
 </Project>
