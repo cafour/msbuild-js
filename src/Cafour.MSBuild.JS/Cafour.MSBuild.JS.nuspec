@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Cafour.MSBuild.JS</id>
+    <version>$version$</version>
+    <authors>Adam Štěpánek</authors>
+    <owners>Adam Štěpánek</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <licenseUrl>https://opensource.org/license/BSD-3-clause</licenseUrl>
+    <projectUrl>https://github.com/cafour/msbuild-js</projectUrl>
+    <description>Opinionated MSBuild targets for integration with the JS world </description>
+    <copyright>Copyright © Adam Štěpánek</copyright>
+    <tags>msbuild javascript npm yarn pnpm corepack</tags>
+    <repository type="git" url="https://github.com/cafour/msbuild-js" commit="$repositoryCommit$" />
+  </metadata>
+  <files>
+    <!-- This placeholder file tells nuget that this package is compatible with basically anything. -->
+    <file src="_._" target="lib/netstandard1.0/" />
+    <file src="_._" target="lib/net40/" />
+
+    <file src="sdk\" target="sdk/" />
+    <file src="targets\" target="build/" />
+    <file src="buildMultiTargeting\" target="buildMultiTargeting/" />
+    <file src="dist\" target="dist/" />
+  </files>
+</package>
