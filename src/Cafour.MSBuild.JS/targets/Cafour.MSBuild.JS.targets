@@ -1,13 +1,23 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <BuildDependsOn>
-      JSBuild;
-      $(BuildDependsOn)
-    </BuildDependsOn>
     <JSRestoreBeforeTargets>
       Restore;
       $(JSRestoreBeforeTargets)
     </JSRestoreBeforeTargets>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' != '' or !$(TargetFrameworks.Contains(';'))">
+    <JSBuildBeforeTargets>
+      BeforeBuild;
+      $(JSBuildBeforeTargets)
+    </JSBuildBeforeTargets>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(TargetFramework)' == '' and $(TargetFrameworks.Contains(';'))">
+    <JSBuildBeforeTargets>
+      DispatchToInnerBuilds;
+      $(JSBuildBeforeTargets)
+    </JSBuildBeforeTargets>
   </PropertyGroup>
 
   <Target Name="_PrepareJSPackagerManager"
@@ -18,7 +28,9 @@
           IgnoreExitCode="true"
           ContinueOnError="true"
           ConsoleToMsBuild="true"
-          EnvironmentVariables="$(JSEnvironmentVariables)">
+          EnvironmentVariables="$(JSEnvironmentVariables)"
+          StandardOutputImportance="low"
+          StandardErrorImportance="low">
       <Output TaskParameter="ExitCode" PropertyName="_PnpmVersionExitCode" />
     </Exec>
     <PropertyGroup Condition="'$(_PnpmVersionExitCode)' == '0'">
@@ -26,11 +38,13 @@
     </PropertyGroup>
 
     <Exec Command="$(YarnExecutablePath) --version"
+          Condition="'$(_PnpmVersionExitCode)' != '0'"
           IgnoreExitCode="true"
           ContinueOnError="true"
           ConsoleToMsBuild="true"
           EnvironmentVariables="$(JSEnvironmentVariables)"
-          Condition="'$(_PnpmVersionExitCode)' != '0'">
+          StandardOutputImportance="low"
+          StandardErrorImportance="low">
       <Output TaskParameter="ExitCode" PropertyName="_YarnVersionExitCode" />
     </Exec>
     <PropertyGroup Condition="'$(_YarnVersionExitCode)' == '0'">
@@ -38,11 +52,13 @@
     </PropertyGroup>
 
     <Exec Command="$(NpmExecutablePath) --version"
+          Condition="'$(_PnpmVersionExitCode)' != '0' and '$(_YarnVersionExitCode)' != '0'"
           IgnoreExitCode="true"
           ContinueOnError="true"
           ConsoleToMsBuild="true"
           EnvironmentVariables="$(JSEnvironmentVariables)"
-          Condition="'$(_PnpmVersionExitCode)' != '0' and '$(_YarnVersionExitCode)' != '0'">
+          StandardOutputImportance="low"
+          StandardErrorImportance="low">
       <Output TaskParameter="ExitCode" PropertyName="_NpmVersionExitCode" />
     </Exec>
     <PropertyGroup Condition="'$(_NpmVersionExitCode)' == '0'">
@@ -57,14 +73,15 @@
 
   <Target Name="JSClean" AfterTargets="Clean">
     <Delete Files="$(_JSRestoreStamp)" />
+    <Delete Files="$(_JSBuildStamp)" />
     <Delete Files="$(_JSBuildLock)" />
   </Target>
 
   <Target Name="_JSUnlock"
           BeforeTargets="JSRestore;JSBuild"
           Condition="Exists($(_JSBuildLock)) and $([MSBuild]::Subtract(
-              $([System.IO.File]::GetLastWriteTime('$(_JSBuildLock)').Ticks),
-              $([System.DateTime]::Now.Ticks)))
+              $([System.DateTime]::Now.Ticks),
+              $([System.IO.File]::GetLastWriteTime('$(_JSBuildLock)').Ticks)))
             > $([MSBuild]::Multiply($(JSBuildLockLifetime), 10000000))">
     <Delete Files="$(_JSBuildLock)" />
   </Target>
@@ -77,15 +94,21 @@
     <Touch Files="$(_JSRestoreStamp)" AlwaysCreate="true" />
     <Exec Command="$(JSPackageManager) $(JSRestoreCommand)"
           WorkingDirectory="$(JSWorkingDirectory)"
-          EnvironmentVariables="$(JSEnvironmentVariables)" />
+          EnvironmentVariables="$(JSEnvironmentVariables)"
+          UseUtf8Encoding="always" />
   </Target>
 
   <Target Name="JSBuild"
-          Condition="'$(JSBuildCommand)' != '' and !Exists($(_JSBuildLock))">
+          Condition="'$(JSBuildCommand)' != '' and !Exists('$(_JSBuildLock)')"
+          BeforeTargets="$(JSBuildBeforeTargets)"
+          Inputs="@(JSBuildInput)"
+          Outputs="$(_JSBuildStamp)">
     <Touch Files="$(_JSBuildLock)" AlwaysCreate="true" />
+    <Touch Files="$(_JSBuildStamp)" AlwaysCreate="true" />
     <Exec Command="$(JSPackageManager) $(JSBuildCommand)"
           WorkingDirectory="$(JSWorkingDirectory)"
-          EnvironmentVariables="$(JSEnvironmentVariables)" />
+          EnvironmentVariables="$(JSEnvironmentVariables)"
+          UseUtf8Encoding="always" />
     <Delete Files="$(_JSBuildLock)" />
   </Target>
 </Project>
