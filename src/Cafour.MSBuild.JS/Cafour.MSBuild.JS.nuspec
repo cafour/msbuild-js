@@ -24,6 +24,5 @@
     <file src="sdk\" target="sdk/" />
     <file src="targets\" target="build/" />
     <file src="buildMultiTargeting\" target="buildMultiTargeting/" />
-    <file src="..\..\README.md" target="docs/" />
   </files>
 </package>
