@@ -1,6 +1,6 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <JSWorkingDir Condition="'$(JSWorkingDir)' == ''">$(MSBuildProjectDirectory)</YarnWorkingDir>
+    <JSWorkingDir Condition="'$(JSWorkingDir)' == ''">$(MSBuildProjectDirectory)</JSWorkingDir>
     <JSPackageManager Condition="'$(JSPackageManager)' == ''">auto</JSPackageManager>
     <JSRestoreCommand Condition="'$(JSRestoreCommand)' == ''">install</JSRestoreCommand>
     <JSBuildCommand Condition="'$(JSBuildCommand)' == ''">run build</JSBuildCommand>
