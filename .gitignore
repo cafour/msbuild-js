@@ -1,0 +1,20 @@
+# ignore all
+*
+
+# directories
+!*/
+
+# git
+!.gitignore
+
+!LICENSE
+!*.md
+!*.sln
+!*.cs
+!*.props
+!*.targets
+!*.csproj
+
+# generated
+obj/
+bin/
