@@ -7,7 +7,7 @@ Opinionated MSBuild targets for integration with selected JS tools.
 ```xml
 <Project>
   <Sdk Name="Microsoft.NET.Sdk" />
-  <Sdk Name="Cafour.MSBuild.JS" Version="0.1.1" />
+  <Sdk Name="Cafour.MSBuild.JS" Version="0.2.0" />
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -29,7 +29,7 @@ If you know in advance what files you want to embed:
 ```xml
 <Project>
   <Sdk Name="Microsoft.NET.Sdk" />
-  <Sdk Name="Cafour.MSBuild.JS" Version="0.1.1" />
+  <Sdk Name="Cafour.MSBuild.JS" Version="0.2.0" />
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
