@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Sdk Name="Microsoft.NET.Sdk" />
+  <!-- Normally you' have this: <Sdk Name="Cafour.MSBuild.JS" Version="0.x.x" /> -->
+  <Import Project="$(MSBuildThisFileDirectory)../src/Cafour.MSBuild.JS/sdk/Sdk.props" />
+  <Import Project="$(MSBuildThisFileDirectory)../src/Cafour.MSBuild.JS/sdk/Sdk.targets" />
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>
