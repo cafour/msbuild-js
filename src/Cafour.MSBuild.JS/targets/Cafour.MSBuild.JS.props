@@ -5,6 +5,8 @@
     <JSPackageManager Condition="'$(JSPackageManager)' == ''">auto</JSPackageManager>
     <JSRestoreCommand Condition="'$(JSRestoreCommand)' == ''">install</JSRestoreCommand>
     <JSBuildCommand Condition="'$(JSBuildCommand)' == ''">run build</JSBuildCommand>
+    <JSUseRestoreInputDefaults Condition="'$(JSUseRestoreInputDefaults)' == ''">true</JSUseRestoreInputDefaults>
+    <JSUseBuildInputDefaults Condition="'$(JSUseBuildInputDefaults)' == ''">true</JSUseBuildInputDefaults>
     <NpmExecutablePath Condition="'$(NpmExecutablePath)' == ''">npm</NpmExecutablePath>
     <YarnExecutablePath Condition="'$(YarnExecutablePath)' == ''">yarnpkg</YarnExecutablePath>
     <PnpmExecutablePath Condition="'$(PnpmExecutablePath)' == ''">pnpm</PnpmExecutablePath>
@@ -14,11 +16,11 @@
     <_JSBuildLock>$(BaseIntermediateOutputPath)/.js-build-lock</_JSBuildLock>
   </PropertyGroup>
   
-  <ItemGroup>
+  <ItemGroup Condition="'$(JSUseRestoreInputDefaults)' == 'true'">
     <JSRestoreInput Include="$(JSWorkingDirectory)/package*.json" />
   </ItemGroup>
   
-  <ItemGroup>
+  <ItemGroup Condition="'$(JSUseBuildInputDefaults)' == 'true'">
     <JSBuildInput Include="$(JSWorkingDirectory)/**/*.js" />
     <JSBuildInput Include="$(JSWorkingDirectory)/**/*.ts" />
     <JSBuildInput Include="$(JSWorkingDirectory)/**/*.scss" />
