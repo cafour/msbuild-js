@@ -19,8 +19,13 @@
 !*.nuspec
 !*.icon
 !*.png
+!*.json
+!*.js
+!*.ts
+!*.scss
 
 # generated
 obj/
 bin/
 artifacts/
+node_modules/
