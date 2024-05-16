@@ -40,7 +40,7 @@ If you know in advance what files you want to embed:
 
   <ItemGroup>
     <EmbeddedResource Include="obj\client\Scripts\script.js" />
-    <EmbeddedResource Include="obj\client\Styles\stylr.css" />
+    <EmbeddedResource Include="obj\client\Styles\style.css" />
   </ItemGroup>
 
 </Project>
