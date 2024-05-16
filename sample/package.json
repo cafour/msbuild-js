@@ -6,7 +6,7 @@
     },
     "type": "module",
     "devDependencies": {
-      "esbuild": "^0.21.3",
+      "esbuild": "^0.20.1",
       "esbuild-sass-plugin": "^3.2.0"
     }
   }
