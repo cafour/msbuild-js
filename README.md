@@ -2,6 +2,24 @@
 
 Opinionated MSBuild targets for integration with selected JS tools.
 
+## Usage
+
+```xml
+<Project>
+  <Sdk Name="Microsoft.NET.Sdk" />
+  <Sdk Name="Cafour.MSBuild.JS" Version="0.1.1" />
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <JSPackageManager>npm</JSPackageManager>
+  </PropertyGroup>
+
+</Project>
+
+```
+
 ## Thanks
 
 **Nate McMaster's [Yarn.MSBuild](https://github.com/natemcmaster/Yarn.MSBuild)**
