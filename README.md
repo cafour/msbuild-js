@@ -51,7 +51,7 @@ If you don't know the exact file names in advance:
 ```xml
 <Project>
   <Sdk Name="Microsoft.NET.Sdk" />
-  <Sdk Name="Cafour.MSBuild.JS" Version="0.1.1" />
+  <Sdk Name="Cafour.MSBuild.JS" Version="0.2.0" />
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -60,7 +60,7 @@ If you don't know the exact file names in advance:
     <JSPackageManager>npm</JSPackageManager>
   </PropertyGroup>
 
-  <Target Name="EmbedJSBuildResults" BeforeTargets="$(JSBuildBeforeTargets)" DependsOnTargets="JSBuild">
+  <Target Name="EmbedJSBuildResults" BeforeTargets="$(JSBuildBeforeTargets)" DependsOnTargets="JSBuild" Condition="'$(DesignTimeBuild)' != 'true'">
     <ItemGroup>
       <EmbeddedResource Include="obj\client\**\*.js" />
       <EmbeddedResource Include="obj\client\**\*.css" />
